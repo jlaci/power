@@ -1,0 +1,55 @@
+doctype html
+html
+  head
+    title= 'Fogyasztás'
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    script(type='text/javascript',  src='/javascripts/Chart.bundle.min.js')
+  body
+    h1 #{startDate} - #{endDate}
+    h3 Napi összesített fogyasztás:
+    div(style='width:80%' class='center')
+      canvas(id='dailyTotalCanvas')
+
+    h3 Napi zónánkénti fogyasztás:
+    div(style='width:80%' class='center')
+      canvas(id='dailyZoneCanvas')
+
+    script(type='text/javascript').
+      var dailyTotalConfig = {
+        type: 'line',
+        data: JSON.parse(!{JSON.stringify(dailyDataTotal)}),
+        options: {
+          scales: {
+            yAxes: [{
+              scaleLabel: {
+                display: true,
+                labelString: 'KWh'
+              }
+            }]
+          }
+        }
+      }
+
+      var dailyZoneConfig = {
+        type: 'line',
+        data: JSON.parse(!{JSON.stringify(dailyDataZone)}),
+        options: {
+          scales: {
+            yAxes: [{
+              stacked: true,
+              scaleLabel: {
+                display: true,
+                labelString: 'KWh'
+              }
+            }]
+          }
+        }
+      }
+
+      window.onload = function() {
+        var ctx = document.getElementById('dailyTotalCanvas').getContext("2d");
+        window.dailyTotalChart = new Chart(ctx, dailyTotalConfig);
+
+        ctx = document.getElementById('dailyZoneCanvas').getContext("2d");
+        window.dailyZoneChart = new Chart(ctx, dailyZoneConfig);
+      };
